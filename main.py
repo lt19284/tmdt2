@@ -70,9 +70,10 @@ def register():
 
         finally:
             if cursor:
-                cursor.close()  # Đóng cursor ở đây
-            if connection and connection.is_connected():
-                connection.close()  # Đóng kết nối ở đây
+                cursor.close()  # Đóng cursor
+            if connection and connection.closed == 0:
+                connection.close()  # Đóng kết nối nếu vẫn mở
+
 
     return render_template('register.html')
 
@@ -89,7 +90,7 @@ def login():
                 return render_template('login.html', error_message="Lỗi Kết Nối Cơ Sở Dữ Liệu")
 
             cursor = connection.cursor()
-            query = "SELECT Password FROM users WHERE username = %s"
+            query = 'SELECT Password FROM users WHERE username = %s'
             cursor.execute(query, (username,))
             result = cursor.fetchone()
 
