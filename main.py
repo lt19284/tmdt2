@@ -79,7 +79,6 @@ def login():
         password = request.form.get('password')
 
         try:
-            # Kết nối cơ sở dữ liệu
             connection = create_connect()
             if connection is None:
                 return render_template('login.html', error_message="Lỗi Kết Nối Cơ Sở Dữ Liệu")
@@ -89,19 +88,10 @@ def login():
             cursor.execute(query, (username,))
             result = cursor.fetchone()
 
-            # Kiểm tra nếu không có kết quả trả về từ truy vấn
             if result is None:
                 return render_template('login.html', error_message="Tên đăng nhập không tồn tại!")
-
-            password_hash = result[0]  # Lấy mật khẩu đã băm từ cơ sở dữ liệu
-
-            # Kiểm tra nếu mật khẩu là None (có thể bị lỗi trong cơ sở dữ liệu)
-            if password_hash is None:
-                return render_template('login.html', error_message="Lỗi: Không có mật khẩu được lưu trữ cho người dùng này.")
-
-            # Kiểm tra mật khẩu đã băm với mật khẩu người dùng nhập vào
-            if check_password_hash(password_hash, password):
-                session['username'] = username
+            if check_password_hash(result[0], password):
+                session['username'] = username  # Lưu thông tin người dùng vào session
                 flash("Đăng Nhập Thành Công!")
                 return redirect(url_for('index'))  # Chuyển đến trang chính khi đăng nhập thành công
             else:
