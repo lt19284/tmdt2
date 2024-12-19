@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-100">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>Nền tảng - Kiến thức cơ bản về WEB | Bảng tin</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css" type="text/css">
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="static/font-awesome/css/font-awesome.min.css" type="text/css">
+
+    <!-- Custom css - Các file css do chúng ta tự viết -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" type="text/css">
+</head>
+
+<body>
+    <!-- header -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top" data-bs-theme="dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Nền tảng</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin/dashboard.html">Quản trị</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="templates/products.html">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Chuyên mục
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Máy tính bảng</a></li>
+                            <li><a class="dropdown-item" href="#">Máy tính xách tay</a></li>
+                            <li><a class="dropdown-item" href="#">Điện thoại</a></li>
+                            <li><a class="dropdown-item" href="#">Linh phụ kiện</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Apple</a></li>
+                            <li><a class="dropdown-item" href="#">Samsung</a></li>
+                            <li><a class="dropdown-item" href="#">HTC</a></li>
+                            <li><a class="dropdown-item" href="#">Nokia</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="templates/about.html">Giới thiệu <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="templates/contact.html">Liên hệ</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search" method="get" action="templates/search.html">
+                    <input class="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Tìm kiếm"
+                        name="keyword_tensanpham">
+                    <button class="btn btn-outline-success" type="submit" style="width: 130px;">Tìm kiếm</button>
+                </form>
+                <ul class="navbar-nav px-3">
+                    <li class="nav-item text-nowrap">
+                        <a class="nav-link" href="/cart">Giỏ hàng</a>
+                    </li>
+                    <li class="nav-item text-nowrap">
+                        <!-- Nếu chưa đăng nhập thì hiển thị nút Đăng nhập -->
+                        <a class="nav-link" href="/login">Đăng nhập</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- end header -->
+
+    <main role="main">
+        <!-- Block content - Đục lỗ trên giao diện bố cục chung, đặt tên là `content` -->
+        <!-- Carousel - Slider -->
+        <div id="myCarousel" class="carousel slide">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="static/img/slider/slider-1.jpg" class="w-100 neta-slider-img" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5><span class="neta-carousel-text">Nền Tảng - Nơi mua sắm tuyệt vời</span></h5>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="static/img/slider/slider-2.jpg" class="w-100 neta-slider-img" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5><span class="neta-carousel-text">Hàng triệu sản phẩm - Lựa chọn mỏi tay</span></h5>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="static/img/slider/slider-3.jpg" class="w-100 neta-slider-img" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5><span class="neta-carousel-text">Chất lượng là Hàng đầu</span></h5>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <!-- Tính năng Marketing -->
+        <div class="container marketing my-4">
+            <!-- Three columns of text below the carousel -->
+            <div class="row">
+                <div class="col-12 col-sm-4 col-lg-4">
+                    <img class="bd-placeholder-img rounded-circle banner-image img-fluid" width="140" height="140"
+                        src="static/img/icon/icon-1.png">
+                    <h2>Đặt hàng</h2>
+                    <p>Chọn sản phẩm bạn yêu thích, và Đặt hàng.</p>
+                </div><!-- /.col-lg-4 -->
+                <div class="col-12 col-sm-4 col-lg-4">
+                    <img class="bd-placeholder-img rounded-circle banner-image img-fluid" width="140" height="140"
+                        src="static/img/icon/icon-2.png">
+                    <h2>Tạo đơn hàng</h2>
+                    <p>Theo dõi đơn hàng của bạn.</p>
+                </div><!-- /.col-lg-4 -->
+                <div class="col-12 col-sm-4 col-lg-4">
+                    <img class="bd-placeholder-img rounded-circle banner-image img-fluid" width="140" height="140"
+                        src="static/img/icon/icon-3.png">
+                    <h2>Giao hàng</h2>
+                    <p>Giao hàng tận nơi.</p>
+                </div><!-- /.col-lg-4 -->
+            </div><!-- /.row -->
+
+
+            <!-- START THE featureS -->
+            <hr class="feature-divider">
+            <div class="row feature">
+                <div class="col-md-7">
+                    <h2 class="feature-heading">Đặt hàng, Tạo đơn hàng, Giao hàng <span class="text-muted">Nhanh
+                            chóng</span>
+                    </h2>
+                    <p class="lead">Nơi mua sắm tuyệt vời cho mọi lứa tuổi.</p>
+                </div>
+                <div class="col-md-5">
+                    <img src="static/img/marketing/marketing-1.png" class="img-fluid">
+                </div>
+            </div>
+
+            <hr class="feature-divider">
+            <div class="row feature">
+                <div class="col-md-7 order-md-2">
+                    <h2 class="feature-heading">Báo cáo Doanh thu tuyệt vời <span class="text-muted">Theo dõi đơn hàng
+                            của bạn.</span></h2>
+                    <p class="lead">Hệ thống theo dõi đơn hàng chi tiết, thông tin mọi lúc mọi nơi.</p>
+                </div>
+                <div class="col-md-5 order-md-1">
+                    <img src="static/img/marketing/marketing-2.png" class="img-fluid">
+                </div>
+            </div>
+
+            <hr class="feature-divider">
+            <!-- /END THE featureS -->
+        </div>
+
+        <!-- Danh sách sản phẩm -->
+        <section class="jumbotron text-center">
+            <div class="container">
+                <h1 class="jumbotron-heading">Danh sách Sản phẩm</h1>
+                <p class="lead text-muted">Các sản phẩm với chất lượng, uy tín, cam kết từ nhà Sản xuất, phân phối và
+                    bảo hành chính hãng.</p>
+            </div>
+        </section>
+
+        <!-- Giải thuật duyệt và render Danh sách sản phẩm theo dòng, cột của Bootstrap -->
+        <div class="danhsachsanpham py-5 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="neta-card-img-container">
+                                <a href="templates/product-detail.html">
+                                    <img class="card-img-top neta-card-img" src="static/img/product/samsung-s3.webp">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="templates/product-detail.html">
+                                    <h6 class="neta-product-name-text">Samsung Galaxy S3</h6>
+                                </a>
+                                <h6 class="m-0 neta-product-category-text">Điện thoại</h6>
+                                <p class="card-text neta-product-description-text">Sản phẩm của Samsung năm 2013</p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-flex flex-column justify-content-between align-items-center">
+                                    <small class="text-muted text-right">
+                                        <s class="neta-product-old-price-text">12,600,000đ</s>
+                                        <b class="neta-product-new-price-text">12,000,000đ</b>
+                                    </small>
+                                    <a class="btn btn-sm btn-outline-secondary neta-btn-view-product-detail"
+                                        href="templates/product-detail.html">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="neta-card-img-container">
+                                <a href="templates/product-detail.html">
+                                    <img class="card-img-top neta-card-img" src="static/img/product/ipad4.png">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="templates/product-detail.html">
+                                    <h6 class="neta-product-name-text">Apple Ipad 4 Wifi 16GB</h6>
+                                </a>
+                                <h6 class="m-0 neta-product-category-text">Máy tính bảng</h6>
+                                <p class="card-text neta-product-description-text">CPU Dual-core Cortex-A9 tốc độ 1GHz
+                                </p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-flex flex-column justify-content-between align-items-center">
+                                    <small class="text-muted text-right">
+                                        <s class="neta-product-old-price-text">12,000,000đ</s>
+                                        <b class="neta-product-new-price-text">11,800,000đ</b>
+                                    </small>
+                                    <a class="btn btn-sm btn-outline-secondary neta-btn-view-product-detail"
+                                        href="templates/product-detail.html">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="neta-card-img-container">
+                                <a href="templates/product-detail.html">
+                                    <img class="card-img-top neta-card-img" src="static/img/product/iphone5.jpg">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="templates/product-detail.html">
+                                    <h6 class="neta-product-name-text">Apple iPhone 5 16GB</h6>
+                                </a>
+                                <h6 class="m-0 neta-product-category-text">Điện thoại</h6>
+                                <p class="card-text neta-product-description-text">CPU: Dual-core 1 GHz<br />&nbsp;</p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-flex flex-column justify-content-between align-items-center">
+                                    <small class="text-muted text-right">
+                                        <b class="neta-product-new-price-text">14,890,000đ</b>
+                                    </small>
+                                    <a class="btn btn-sm btn-outline-secondary neta-btn-view-product-detail"
+                                        href="templates/product-detail.html">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="neta-card-img-container">
+                                <a href="templates/product-detail.html">
+                                    <img class="card-img-top neta-card-img" src="static/img/product/iphone5-white.jpeg">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="templates/product-detail.html">
+                                    <h6 class="neta-product-name-text">Apple iPhone 5 16GB White</h6>
+                                </a>
+                                <h6 class="m-0 neta-product-category-text">Điện thoại</h6>
+                                <p class="card-text neta-product-description-text">CPU: Dual-core 1 GHz - Màu trắng</p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-flex flex-column justify-content-between align-items-center">
+                                    <small class="text-muted text-right">
+                                        <s class="neta-product-old-price-text">7,600,000đ</s>
+                                        <b class="neta-product-new-price-text">5,200,000đ</b>
+                                    </small>
+                                    <a class="btn btn-sm btn-outline-secondary neta-btn-view-product-detail"
+                                        href="templates/product-detail.html">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="neta-card-img-container">
+                                <a href="templates/product-detail.html">
+                                    <img class="card-img-top neta-card-img"
+                                        src="static/img/product/samsung-galaxy-tab-10.jpg">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="templates/product-detail.html">
+                                    <h6 class="neta-product-name-text">Samsung Galaxy Tab 10.1 3G 16G</h6>
+                                </a>
+                                <h6 class="m-0 neta-product-category-text">Máy tính bảng</h6>
+                                <p class="card-text neta-product-description-text">Màn hình 10.1 inch cảm ứng đa điểm
+                                </p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-flex flex-column justify-content-between align-items-center">
+                                    <small class="text-muted text-right">
+
+                                        <b class="neta-product-new-price-text">10,990,000đ</b>
+                                    </small>
+                                    <a class="btn btn-sm btn-outline-secondary neta-btn-view-product-detail"
+                                        href="templates/product-detail.html">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="neta-card-img-container">
+                                <a href="templates/product-detail.html">
+                                    <img class="card-img-top neta-card-img" src="static/img/product/nokia-asha-311.jpg">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="templates/product-detail.html">
+                                    <h6 class="neta-product-name-text">Nokia Asha 311 màu đen huyền bí</h6>
+                                </a>
+                                <h6 class="m-0 neta-product-category-text">Điện thoại</h6>
+                                <p class="card-text neta-product-description-text">Điện thoại di động Nokia Asha 311</p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-flex flex-column justify-content-between align-items-center">
+                                    <small class="text-muted text-right">
+                                        <s class="neta-product-old-price-text">3,000,000đ</s>
+                                        <b class="neta-product-new-price-text">2,699,000đ</b>
+                                    </small>
+                                    <a class="btn btn-sm btn-outline-secondary neta-btn-view-product-detail"
+                                        href="templates/product-detail.html">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="neta-card-img-container">
+                                <a href="templates/product-detail.html">
+                                    <img class="card-img-top neta-card-img"
+                                        src="static/img/product/samsung-galaxy-tab.jpg">
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="templates/product-detail.html">
+                                    <h6 class="neta-product-name-text">Samsung Galaxy Tab 2 7.0</h6>
+                                </a>
+                                <h6 class="m-0 neta-product-category-text">Máy tính bảng</h6>
+                                <p class="card-text neta-product-description-text">Máy tính bảng Samsung Galaxy Tab 2
+                                    7.0</p>
+                            </div>
+                            <div class="card-footer text-body-secondary">
+                                <div class="d-flex flex-column justify-content-between align-items-center">
+                                    <small class="text-muted text-right">
+                                        <s class="neta-product-old-price-text">7,950,000đ</s>
+                                        <b class="neta-product-new-price-text">7,500,000đ</b>
+                                    </small>
+                                    <a class="btn btn-sm btn-outline-secondary neta-btn-view-product-detail"
+                                        href="templates/product-detail.html">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End block content -->
+    </main>
+    <!-- end footer -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="static/jquery/jquery.min.js"></script>
+    <script src="static/popperjs/popper.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Custom script - Các file js do mình tự viết -->
+    <script src="static/js/app.js"></script>
+
+</body>
+
+</html>
