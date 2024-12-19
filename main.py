@@ -110,9 +110,10 @@ def login():
 # Đăng xuất người dùng
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('username', None)  # Xóa thông tin người dùng trong session
     flash("Đã Đăng Xuất Thành Công!")
-    return redirect(url_for('index'))
+    return redirect(url_for('index'))  # Quay về trang chủ
+
 
 # Kiểm tra xem người dùng đã đăng nhập chưa
 def is_logged_in():
@@ -121,9 +122,13 @@ def is_logged_in():
 # Trang giỏ hàng (chỉ cho phép truy cập khi đăng nhập)
 @app.route('/cart')
 def cart():
-    if not is_logged_in():
+    # Kiểm tra xem người dùng đã đăng nhập hay chưa bằng cách kiểm tra session
+    if not session.get('username'):  # Kiểm tra nếu không có 'username' trong session
         flash("Bạn phải đăng nhập để truy cập giỏ hàng!")
         return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+    # Nếu đã đăng nhập, hiển thị trang giỏ hàng
+    return render_template('cart.html')
+
 
     # Lấy danh sách sản phẩm trong giỏ hàng của người dùng
     user_id = session['user_id']
