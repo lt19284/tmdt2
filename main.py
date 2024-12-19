@@ -152,5 +152,10 @@ def cart():
 def contact():
     return render_template('contact.html')
 
+@app.route('/add-to-cart')
+def add_to_cart():
+    return render_template('add-to-cart.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
