@@ -78,6 +78,7 @@ def login():
         password = request.form.get('password')
 
         try:
+            # Kết nối cơ sở dữ liệu
             connection = create_connect()
             if connection is None:
                 return render_template('login.html', error_message="Lỗi Kết Nối Cơ Sở Dữ Liệu")
@@ -87,24 +88,32 @@ def login():
             cursor.execute(query, (username,))
             result = cursor.fetchone()
 
+            # Kiểm tra nếu không có kết quả trả về từ truy vấn
             if result is None:
                 return render_template('login.html', error_message="Tên đăng nhập không tồn tại!")
-            if check_password_hash(result[0], password):
+
+            password_hash = result[0]  # Lấy mật khẩu đã băm từ cơ sở dữ liệu
+
+            # Kiểm tra nếu mật khẩu là None (có thể bị lỗi trong cơ sở dữ liệu)
+            if password_hash is None:
+                return render_template('login.html', error_message="Lỗi: Không có mật khẩu được lưu trữ cho người dùng này.")
+
+            # Kiểm tra mật khẩu đã băm với mật khẩu người dùng nhập vào
+            if check_password_hash(password_hash, password):
                 session['username'] = username
                 flash("Đăng Nhập Thành Công!")
-                return redirect(url_for('index.html'))
+                return redirect(url_for('index'))  # Chuyển đến trang chính khi đăng nhập thành công
             else:
                 return render_template('login.html', error_message="Mật khẩu không đúng!")
 
-        except psycopg2.Error as e:
+        except Error as e:
             print(f"Error: {e}")
-            flash(f"Đã xảy ra lỗi trong quá trình đăng nhập: {e}")
+            flash("Đã xảy ra lỗi trong quá trình đăng nhập.")
             return render_template('login.html')
 
         finally:
             if connection:
                 connection.close()  # Đóng kết nối ở đây
-
     return render_template('login.html')
 
 # Đăng xuất người dùng
