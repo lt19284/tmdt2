@@ -1,39 +1,33 @@
 from flask import Flask, render_template, request, redirect, flash, session, url_for, jsonify
-import mysql.connector
-from mysql.connector import Error
-from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import psycopg2
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
 app.secret_key = "172.0.0.1"
 
-
-db_url = os.getenv("DATABASE_URL")
-secret_key = os.getenv("SECRET_KEY")
-print("database URL:", db_url)
-print("SecretKey:", secret_key)
-
-#Tạo kết nối đến database
+# Cấu hình kết nối cơ sở dữ liệu
 def create_connect():
     try:
         conn = psycopg2.connect(
-        dbname = "tmdt_db_f6sg",
-        user = "tmdt_db_f6sg_user",
-        password = "vLP9RsiNLx9UdXQiPWPvBwCDuFfTAcfG",
-        host = "dpg-ct586h9u0jms73aci1s0-a.oregon-postgres.render.com",
-        port = "5432"
-    )
+            dbname="tmdt_db_f6sg",
+            user="tmdt_db_f6sg_user",
+            password="vLP9RsiNLx9UdXQiPWPvBwCDuFfTAcfG",
+            host="dpg-ct586h9u0jms73aci1s0-a.oregon-postgres.render.com",
+            port="5432"
+        )
         return conn
     except Exception as e:
         print(f"Lỗi Kết Nối: {e}")
         return None
 
-@app.route("/") 
+# Trang chính
+@app.route("/")
 def index():
     return render_template('index.html')
-# Đăng ký Tài Khoản
+
+# Đăng ký tài khoản
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -63,21 +57,20 @@ def register():
             flash("Đăng ký thành công!")
             return redirect(url_for('login'))
 
-        except Error as e:
+        except psycopg2.Error as e:
             print(f"Error: {e}")
-            flash("Đã xảy ra lỗi trong quá trình đăng ký.")
+            flash(f"Đã xảy ra lỗi trong quá trình đăng ký: {e}")
             return render_template('register.html')
 
         finally:
             if cursor:
-                cursor.close()  # Đóng cursor
+                cursor.close()
             if connection and connection.closed == 0:
-                connection.close()  # Đóng kết nối nếu vẫn mở
-
+                connection.close()
 
     return render_template('register.html')
 
-# Đăng Nhập Người Dùng
+# Đăng nhập người dùng
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -94,31 +87,29 @@ def login():
             cursor.execute(query, (username,))
             result = cursor.fetchone()
 
-            cursor.close()  # Đóng cursor ngay sau khi đã lấy kết quả
-
             if result is None:
                 return render_template('login.html', error_message="Tên đăng nhập không tồn tại!")
             if check_password_hash(result[0], password):
                 session['username'] = username
                 flash("Đăng Nhập Thành Công!")
-                return redirect(url_for('index'))  # Chuyển đến trang chính khi đăng nhập thành công
+                return redirect(url_for('index'))
             else:
                 return render_template('login.html', error_message="Mật khẩu không đúng!")
 
-        except Error as e:
+        except psycopg2.Error as e:
             print(f"Error: {e}")
-            flash("Đã xảy ra lỗi trong quá trình đăng nhập.")
+            flash(f"Đã xảy ra lỗi trong quá trình đăng nhập: {e}")
             return render_template('login.html')
 
         finally:
             if connection:
                 connection.close()  # Đóng kết nối ở đây
+
     return render_template('login.html')
 
-# Log Out Người Dùng
+# Đăng xuất người dùng
 @app.route('/logout')
 def logout():
-    #Xoá session để đăng xuất ngườI dùng
     session.pop('username', None)
     flash("Đã Đăng Xuất Thành Công!")
     return redirect(url_for('index'))
@@ -128,7 +119,7 @@ def logout():
 def cart():
     return render_template('cart.html')
 
-#Trang Contact
+# Trang contact
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
