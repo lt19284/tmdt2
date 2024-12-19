@@ -72,11 +72,7 @@
                     <li class="nav-item text-nowrap">
                         <a class="nav-link" href="/cart">Giỏ hàng</a>
                     </li>
-                    <li class="nav-item text-nowrap">
-                        <!-- Nếu chưa đăng nhập thì hiển thị nút Đăng nhập -->
-                        <a class="nav-link" href="/login">Đăng nhập</a>
-                    </li>
-                     {% if username %}
+                    {% if username %}
                         <p>Chào, {{ username }}!</p>  <!-- Hiển thị tên người dùng -->
                         <a href="{{ url_for('logout') }}">Đăng xuất</a>
                     {% else %}
