@@ -90,7 +90,7 @@ def login():
                 return render_template('login.html', error_message="Lỗi Kết Nối Cơ Sở Dữ Liệu")
 
             cursor = connection.cursor()
-            query = 'SELECT Password FROM users WHERE username = %s'
+            query = "SELECT password FROM users WHERE username = %s"
             cursor.execute(query, (username,))
             result = cursor.fetchone()
 
