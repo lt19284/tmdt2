@@ -123,10 +123,33 @@ def logout():
     flash("Đã Đăng Xuất Thành Công!")
     return redirect(url_for('index'))
 
-# Trang giỏ hàng
+# Kiểm tra xem người dùng đã đăng nhập chưa
+def is_logged_in():
+    return 'user_id' in session
+
+# Trang giỏ hàng (chỉ cho phép truy cập khi đăng nhập)
 @app.route('/cart')
 def cart():
-    return render_template('cart.html')
+    if not is_logged_in():
+        flash("Bạn phải đăng nhập để truy cập giỏ hàng!")
+        return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+
+    # Lấy danh sách sản phẩm trong giỏ hàng của người dùng
+    user_id = session['user_id']
+    conn = create_connection()
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT p.name, p.price, c.quantity 
+            FROM cart c
+            JOIN products p ON c.product_id = p.id
+            WHERE c.user_id = %s
+        """, (user_id,))
+        cart_items = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+    return render_template('cart.html', cart_items=cart_items)
 
 # Trang contact
 @app.route('/contact')
