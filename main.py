@@ -124,9 +124,42 @@ def logout():
     return redirect(url_for('index'))
 
 # Trang giỏ hàng
-@app.route('/cart')
+@app.route('/cart', methods=['GET', 'POST'])
 def cart():
-    return render_template('cart.html')
+    if request.method == 'POST':
+        product_id = request.form.get('product_id')
+        quantity = request.form.get('quantity', 1)
+        # Thêm logic cập nhật giỏ hàng vào session hoặc database
+        flash('Sản phẩm đã được thêm vào giỏ hàng!')
+        return redirect(url_for('cart'))
+    # Lấy danh sách sản phẩm trong giỏ hàng từ session hoặc database
+    cart_items = []  # Thay bằng dữ liệu từ database    
+    return render_template('cart.html', cart_items=cart_items)
+
+@app.route('/product-detail/<int:product_id>')
+def product_detail(product_id):
+    # Lấy thông tin chi tiết sản phẩm từ database dựa trên product_id
+    product = {}  # Thay bằng truy vấn từ database
+    return render_template('product_detail.html', product=product)
+
+# Tìm kiếm sản phẩm
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q', '')
+    # Thực hiện tìm kiếm sản phẩm trong database dựa trên query
+    results = []  # Thay bằng kết quả tìm kiếm từ database
+    return render_template('search.html', query=query, results=results)
+
+# Trang thanh toán
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    if request.method == 'POST':
+        # Xử lý đơn hàng: lưu thông tin vào database, gửi email, v.v.
+        flash('Thanh toán thành công!')
+        return redirect(url_for('index'))
+    # Lấy thông tin giỏ hàng và hiển thị trên trang thanh toán
+    cart_items = []  # Thay bằng dữ liệu từ database
+    return render_template('checkout.html', cart_items=cart_items)
 
 # Trang contact
 @app.route('/contact')
