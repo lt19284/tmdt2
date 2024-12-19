@@ -92,7 +92,7 @@ def login():
             if check_password_hash(result[0], password):
                 session['username'] = username
                 flash("Đăng Nhập Thành Công!")
-                return redirect(url_for('index'))
+                return redirect(url_for('index.html'))
             else:
                 return render_template('login.html', error_message="Mật khẩu không đúng!")
 
