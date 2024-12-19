@@ -56,7 +56,7 @@ def register():
                 return render_template('register.html', error_message="Lỗi kết nối cơ sở dữ liệu!")
 
             cursor = connection.cursor()
-            insert_query = "INSERT INTO users (username, Password, Email, PhoneNumber) VALUES (%s, %s, %s, %s)"
+            insert_query = "INSERT INTO users (username, password, email, phonenumber) VALUES (%s, %s, %s, %s)"
             cursor.execute(insert_query, (username, hashed_password, email, phonenumber))
             connection.commit()
 
