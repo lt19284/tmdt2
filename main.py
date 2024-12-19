@@ -25,7 +25,8 @@ def create_connect():
 # Trang chính
 @app.route("/")
 def index():
-    return render_template('index.html')
+    username = session.get('username')
+    return render_template('index.html', username=username)
 
 # Đăng ký tài khoản
 @app.route('/register', methods=['GET', 'POST'])
