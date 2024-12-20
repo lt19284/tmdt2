@@ -73,9 +73,7 @@
                     {% for item in cart_items %}
                         <tr>
                             <td>{{ item.name }}</td>
-                            <td>{{ item.price | format_currency }}</td>
                             <td>{{ item.quantity }}</td>
-                            <td>{{ (item.price * item.quantity) | format_currency }}</td>
                             <td>
                                 <button class="btn btn-danger btn-sm remove-item" data-id="{{ item.id }}">
                                     Xóa
@@ -86,7 +84,6 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-between">
-                <strong>Tổng tiền: {{ total_price | format_currency }}</strong>
                 <a href="{{ url_for('checkout') }}" class="btn btn-primary">Thanh toán</a>
             </div>
         {% else %}
