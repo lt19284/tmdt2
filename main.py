@@ -171,6 +171,46 @@ def checkout():
     # Lấy thông tin giỏ hàng và hiển thị trên trang thanh toán
     cart_items = session.get('cart_items', [])
     return render_template('checkout.html', cart_items=cart_items)
+    
+#thêm Sản Phẩm
+@app.route('/add_product', methods=['GET', 'POST'])
+def add_product():
+    # Kiểm tra nếu người dùng chưa đăng nhập
+    if 'user_id' not in session:
+        flash("Bạn phải đăng nhập để thêm sản phẩm!", "danger")
+        return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập
+
+    if request.method == 'POST':
+        # Lấy dữ liệu từ form
+        name = request.form.get('name')
+        price = request.form.get('price')
+        description = request.form.get('description')
+
+        # Kiểm tra dữ liệu hợp lệ
+        if not name or not price:
+            flash("Tên sản phẩm và giá không được để trống!", "danger")
+            return redirect(url_for('add_product'))
+
+        # Thêm sản phẩm vào cơ sở dữ liệu
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO products (name, price, description) VALUES (%s, %s, %s)",
+                (name, price, description)
+            )
+            conn.commit()
+            cur.close()
+            conn.close()
+            flash("Sản phẩm đã được thêm thành công!", "success")
+            return redirect(url_for('index'))
+        except Exception as e:
+            flash(f"Có lỗi xảy ra khi thêm sản phẩm: {e}", "danger")
+            return redirect(url_for('add_product'))
+
+    # Hiển thị form thêm sản phẩm
+    return render_template('add_product.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
