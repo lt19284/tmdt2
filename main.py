@@ -123,15 +123,25 @@ def is_logged_in():
 @app.route('/cart', methods=['GET', 'POST'])
 def cart():
     if request.method == 'POST':
+        # Nhận dữ liệu sản phẩm từ yêu cầu
         data = request.json
         product_id = data.get('id')
         name = data.get('name')
-        price = data.get('price')
-        quantity = data.get('quantity')
+        price = float(data.get('price'))
+        quantity = int(data.get('quantity'))
 
         # Giả lập lưu trữ sản phẩm trong session
         if 'cart_items' not in session:
             session['cart_items'] = []
+
+        # Kiểm tra nếu sản phẩm đã tồn tại, tăng số lượng
+        for item in session['cart_items']:
+            if item['id'] == product_id:
+                item['quantity'] += quantity
+                session.modified = True
+                return jsonify({'message': 'Sản phẩm đã được cập nhật trong giỏ hàng!'})
+
+        # Nếu sản phẩm chưa tồn tại, thêm mới
         session['cart_items'].append({
             'id': product_id,
             'name': name,
@@ -139,19 +149,27 @@ def cart():
             'quantity': quantity
         })
         session.modified = True
-
         return jsonify({'message': 'Sản phẩm đã được thêm vào giỏ hàng!'})
 
     # Lấy danh sách sản phẩm trong giỏ hàng từ session
     cart_items = session.get('cart_items', [])
     return render_template('cart.html', cart_items=cart_items)
 
-# Trang chi tiết sản phẩm
-@app.route('/product-detail/<int:product_id>')
-def product_detail(product_id):
-    # Lấy thông tin chi tiết sản phẩm từ database dựa trên product_id
-    product = {}  # Thay bằng truy vấn từ database
-    return render_template('product_detail.html', product=product)
+# Route xóa sản phẩm khỏi giỏ hàng
+@app.route('/cart/remove', methods=['POST'])
+def remove_from_cart():
+    if request.method == 'POST':
+        data = request.json
+        product_id = data.get('id')
+
+        # Kiểm tra sản phẩm trong giỏ và xóa
+        if 'cart_items' in session:
+            session['cart_items'] = [item for item in session['cart_items'] if item['id'] != product_id]
+            session.modified = True
+            return jsonify({'message': 'Sản phẩm đã được xóa khỏi giỏ hàng!'})
+
+        return jsonify({'message': 'Không tìm thấy sản phẩm trong giỏ hàng!'})
+
 
 # Tìm kiếm sản phẩm
 @app.route('/search', methods=['GET'])
