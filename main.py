@@ -2,6 +2,16 @@ from flask import Flask, render_template, request, redirect, flash, session, url
 import os
 import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
+import locale
+locale.setlocale(locale.LC_ALL, 'vi_VN.UTF-8')
+# Định nghĩa filter tùy chỉnh
+@app.template_filter('format_currency')
+def format_currency(value):
+    try:
+        # Định dạng giá trị thành tiền tệ
+        return locale.currency(value, grouping=True)
+    except Exception as e:
+        return value
 
 app = Flask(__name__)
 app.secret_key = "172.0.0.1"
