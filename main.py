@@ -149,19 +149,6 @@ def cart():
     cart_items = session.get('cart_items', [])
     return render_template('cart.html', cart_items=cart_items)
 
-# Xóa sản phẩm khỏi giỏ hàng
-@app.route('/cart/remove', methods=['POST'])
-def remove_from_cart():
-    if request.method == 'POST':
-        data = request.json
-        product_id = data.get('id')
-
-        if 'cart_items' in session:
-            session['cart_items'] = [item for item in session['cart_items'] if item['id'] != product_id]
-            session.modified = True
-            return jsonify({'message': 'Sản phẩm đã được xóa khỏi giỏ hàng!'})
-
-        return jsonify({'message': 'Không tìm thấy sản phẩm trong giỏ hàng!'})
 
 # Tìm kiếm sản phẩm
 @app.route('/search', methods=['GET'])
