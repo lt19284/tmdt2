@@ -5,123 +5,154 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Giỏ hàng của bạn trên Lumetamy - Nền tảng mua sắm trực tuyến.">
-    <meta name="author" content="Lumetamy Team">
-
-    <title>Lumetamy - Giỏ hàng</title>
+    <title>Nền tảng - Kiến thức cơ bản về WEB | Bảng tin</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css" type="text/css">
-    <!-- Font Awesome -->
+    <!-- Font awesome -->
     <link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css" type="text/css">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" type="text/css">
+    <!-- Custom css - Các file css do chúng ta tự viết -->
+    <link rel="stylesheet" href="../static/css/app.css" type="text/css">
 </head>
 
 <body>
-    <!-- Header -->
+    <!-- header -->
     <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Nền tảng</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
+            <a class="navbar-brand" href="../index.html">Nền tảng</a>
+            <div class="navbar-collapse collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/products">Sản phẩm</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about">Giới thiệu</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact">Liên hệ</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../admin/dashboard.html">Quản trị</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">Giới thiệu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Liên hệ</a>
+                    </li>
                 </ul>
-                <form class="form-inline" method="get" action="/search">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Tìm kiếm" name="keyword_tensanpham">
-                    <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+                <form class="form-inline mt-2 mt-md-0" method="get" action="search.html">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Tìm kiếm" aria-label="Search"
+                        name="keyword_tensanpham">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
                 </form>
             </div>
             <ul class="navbar-nav px-3">
-                <li class="nav-item text-nowrap">
-                    <a class="nav-link" href="/cart">Giỏ hàng</a>
+                <li class="nav-item text-nowrap active">
+                    <a class="nav-link" href="/cart">Giỏ hàng <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item text-nowrap">
-                    {% if session.get('username') %}
-                        <span class="nav-link">Chào, {{ session['username'] }}!</span>
-                        <a class="btn btn-danger btn-sm" href="{{ url_for('logout') }}">Đăng xuất</a>
-                    {% else %}
-                        <a class="btn btn-success btn-sm" href="{{ url_for('login') }}">Đăng nhập</a>
-                    {% endif %}
+                    <!-- Nếu chưa đăng nhập thì hiển thị nút Đăng nhập -->
+                    <a class="nav-link" href="/login">Đăng nhập</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <!-- End Header -->
+    <!-- end header -->
 
-    <main class="container mt-4">
-        {% if cart_items %}
-            <h2>Giỏ hàng của bạn</h2>
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Tổng</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart_items %}
-                        <tr>
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>
-                                <button class="btn btn-danger btn-sm remove-item" data-id="{{ item.id }}">
-                                    Xóa
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between">
-                <a href="{{ url_for('checkout') }}" class="">Thanh toán</a>
+    <main role="main">
+        <!-- Block content - Đục lỗ trên giao diện bố cục chung, đặt tên là `content` -->
+        <div class="container mt-4">
+            <div id="thongbao" class="alert alert-danger d-none face" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
-        {% else %}
-            <p class="alert alert-info">Giỏ hàng của bạn trống!</p>
-            <a href="{{ url_for('index') }}" class="">Tiếp tục mua sắm</a>
-        {% endif %}
-    </main>
 
-    <!-- Footer -->
-    <footer class="footer mt-auto py-3 bg-dark text-light text-center">
-        <div class="container">
-            <span>&copy; 2024 Lumetamy. Mọi quyền được bảo lưu.</span>
+            <h1 class="text-center">Giỏ hàng</h1>
+            <div class="row">
+                <div class="col col-md-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Ảnh đại diện</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="datarow">
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <img src="../static/img/product/ipad4.png" class="hinhdaidien">
+                                </td>
+                                <td>Apple Ipad 4 Wifi 16GB</td>
+                                <td class="text-right">2</td>
+                                <td class="text-right">11,800,000.00</td>
+                                <td class="text-right">23,600,000</td>
+                                <td>
+                                    <!-- Nút xóa, bấm vào sẽ xóa thông tin dựa vào khóa chính `sp_ma` -->
+                                    <a id="delete_1" data-sp-ma="2" class="btn btn-danger btn-delete-sanpham">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    <img src="../static/img/product/nokia-asha-311.jpg" class="hinhdaidien">
+                                </td>
+                                <td>Nokia Asha 311</td>
+                                <td class="text-right">4</td>
+                                <td class="text-right">2,699,000.00</td>
+                                <td class="text-right">1,0796,000</td>
+                                <td>
+                                    <!-- Nút xóa, bấm vào sẽ xóa thông tin dựa vào khóa chính `sp_ma` -->
+                                    <a id="delete_2" data-sp-ma="6" class="btn btn-danger btn-delete-sanpham">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    <img src="../static/img/product/iphone5-white.jpeg" class="hinhdaidien">
+                                </td>
+                                <td>Apple iPhone 5 16GB White</td>
+                                <td class="text-right">8</td>
+                                <td class="text-right">1,4990,000.00</td>
+                                <td class="text-right">119,920,000</td>
+                                <td>
+                                    <!-- Nút xóa, bấm vào sẽ xóa thông tin dựa vào khóa chính `sp_ma` -->
+                                    <a id="delete_3" data-sp-ma="4" class="btn btn-danger btn-delete-sanpham">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <a href="/" class="btn btn-warning btn-md"><i class="fa fa-arrow-left"
+                            aria-hidden="true"></i>&nbsp;Quay
+                        về trang chủ</a>
+                    <a href="../checkout" class="btn btn-primary btn-md"><i
+                            class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;Thanh toán</a>
+                </div>
+            </div>
         </div>
-    </footer>
-
+        <!-- End block content -->
+    </main>
     <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="../static/jquery/jquery.min.js"></script>
-    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.remove-item').click(function() {
-                const itemId = $(this).data('id');
-                $.ajax({
-                    url: '/cart/remove',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ id: itemId }),
-                    success: function(response) {
-                        alert(response.message);
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Xảy ra lỗi: " + error);
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="../static/popperjs/popper.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Custom script - Các file js do mình tự viết -->
+    <script src="../static/js/app.js"></script>
+
 </body>
 
 </html>
