@@ -3,7 +3,6 @@ import os
 import psycopg2
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 app = Flask(__name__)
 app.secret_key = "172.0.0.1"
 
@@ -19,7 +18,7 @@ def create_connect():
         )
         return conn
     except Exception as e:
-        print(f"Lỗi Kết Nối: {e}")
+        print(f"Lỗi kết nối: {e}")
         return None
 
 # Trang chính
@@ -38,11 +37,9 @@ def register():
         email = request.form.get('email')
         phonenumber = request.form.get('phonenumber')
 
-        # Kiểm tra mật khẩu
         if password != confirm_password:
-            return render_template('register.html', error_message="Mật khẩu không khớp, vui lòng thử lại!")
+            return render_template('register.html', error_message="Mật khẩu không khớp!")
 
-        # Mã hóa mật khẩu trước khi lưu
         hashed_password = generate_password_hash(password)
 
         try:
@@ -57,12 +54,10 @@ def register():
 
             flash("Đăng ký thành công!")
             return redirect(url_for('login'))
-
         except psycopg2.Error as e:
-            print(f"Error: {e}")
-            flash(f"Đã xảy ra lỗi trong quá trình đăng ký: {e}")
+            print(f"Lỗi: {e}")
+            flash("Đã xảy ra lỗi trong quá trình đăng ký.")
             return render_template('register.html')
-
         finally:
             if cursor:
                 cursor.close()
@@ -71,7 +66,7 @@ def register():
 
     return render_template('register.html')
 
-# Đăng nhập người dùng
+# Đăng nhập
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -81,7 +76,7 @@ def login():
         try:
             connection = create_connect()
             if connection is None:
-                return render_template('login.html', error_message="Lỗi Kết Nối Cơ Sở Dữ Liệu")
+                return render_template('login.html', error_message="Lỗi kết nối cơ sở dữ liệu!")
 
             cursor = connection.cursor()
             query = "SELECT password FROM users WHERE username = %s"
@@ -91,57 +86,47 @@ def login():
             if result is None:
                 return render_template('login.html', error_message="Tên đăng nhập không tồn tại!")
             if check_password_hash(result[0], password):
-                session['username'] = username  # Lưu thông tin người dùng vào session
-                flash("Đăng Nhập Thành Công!")
-                return redirect(url_for('index'))  # Chuyển đến trang chính khi đăng nhập thành công
+                session['username'] = username
+                flash("Đăng nhập thành công!")
+                return redirect(url_for('index'))
             else:
                 return render_template('login.html', error_message="Mật khẩu không đúng!")
-
-        except Error as e:
-            print(f"Error: {e}")
+        except psycopg2.Error as e:
+            print(f"Lỗi: {e}")
             flash("Đã xảy ra lỗi trong quá trình đăng nhập.")
             return render_template('login.html')
-
         finally:
             if connection:
-                connection.close()  # Đóng kết nối ở đây
+                connection.close()
+
     return render_template('login.html')
 
-# Đăng xuất người dùng
+# Đăng xuất
 @app.route('/logout')
 def logout():
-    session.pop('username', None)  # Xóa thông tin người dùng trong session
-    flash("Đã Đăng Xuất Thành Công!")
-    return redirect(url_for('index'))  # Quay về trang chủ
+    session.pop('username', None)
+    flash("Đăng xuất thành công!")
+    return redirect(url_for('index'))
 
-
-# Kiểm tra xem người dùng đã đăng nhập chưa
-def is_logged_in():
-    return 'user_id' in session
-
-# Trang giỏ hàng (chỉ cho phép truy cập khi đăng nhập)
+# Trang giỏ hàng
 @app.route('/cart', methods=['GET', 'POST'])
 def cart():
     if request.method == 'POST':
-        # Nhận dữ liệu sản phẩm từ yêu cầu
         data = request.json
         product_id = data.get('id')
         name = data.get('name')
         price = float(data.get('price'))
         quantity = int(data.get('quantity'))
 
-        # Giả lập lưu trữ sản phẩm trong session
         if 'cart_items' not in session:
             session['cart_items'] = []
 
-        # Kiểm tra nếu sản phẩm đã tồn tại, tăng số lượng
         for item in session['cart_items']:
             if item['id'] == product_id:
                 item['quantity'] += quantity
                 session.modified = True
                 return jsonify({'message': 'Sản phẩm đã được cập nhật trong giỏ hàng!'})
 
-        # Nếu sản phẩm chưa tồn tại, thêm mới
         session['cart_items'].append({
             'id': product_id,
             'name': name,
@@ -151,18 +136,16 @@ def cart():
         session.modified = True
         return jsonify({'message': 'Sản phẩm đã được thêm vào giỏ hàng!'})
 
-    # Lấy danh sách sản phẩm trong giỏ hàng từ session
     cart_items = session.get('cart_items', [])
     return render_template('cart.html', cart_items=cart_items)
 
-# Route xóa sản phẩm khỏi giỏ hàng
+# Xóa sản phẩm khỏi giỏ hàng
 @app.route('/cart/remove', methods=['POST'])
 def remove_from_cart():
     if request.method == 'POST':
         data = request.json
         product_id = data.get('id')
 
-        # Kiểm tra sản phẩm trong giỏ và xóa
         if 'cart_items' in session:
             session['cart_items'] = [item for item in session['cart_items'] if item['id'] != product_id]
             session.modified = True
@@ -170,65 +153,59 @@ def remove_from_cart():
 
         return jsonify({'message': 'Không tìm thấy sản phẩm trong giỏ hàng!'})
 
-
 # Tìm kiếm sản phẩm
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('q', '')
-    # Thực hiện tìm kiếm sản phẩm trong database dựa trên query
-    results = []  # Thay bằng kết quả tìm kiếm từ database
+    results = []  # Kết quả giả lập, thay bằng dữ liệu thực từ database
     return render_template('search.html', query=query, results=results)
 
-# Trang thanh toán
+# Thanh toán
 @app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     if request.method == 'POST':
-        # Xử lý đơn hàng: lưu thông tin vào database, gửi email, v.v.
         flash('Thanh toán thành công!')
+        session.pop('cart_items', None)  # Xóa giỏ hàng sau khi thanh toán
         return redirect(url_for('index'))
-    # Lấy thông tin giỏ hàng và hiển thị trên trang thanh toán
     cart_items = session.get('cart_items', [])
     return render_template('checkout.html', cart_items=cart_items)
-    
-#thêm Sản Phẩm
+
+# Thêm sản phẩm
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
-    # Kiểm tra nếu người dùng chưa đăng nhập
     if 'username' not in session:
         flash("Bạn phải đăng nhập để thêm sản phẩm!", "danger")
-        return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
-        # Lấy dữ liệu từ form
         name = request.form.get('name')
         price = request.form.get('price')
         description = request.form.get('description')
 
-        # Kiểm tra dữ liệu hợp lệ
         if not name or not price:
             flash("Tên sản phẩm và giá không được để trống!", "danger")
             return redirect(url_for('add_product'))
 
-        # Thêm sản phẩm vào cơ sở dữ liệu
         try:
-            conn = get_db_connection()
-            cur = conn.cursor()
-            cur.execute(
+            connection = create_connect()
+            cursor = connection.cursor()
+            cursor.execute(
                 "INSERT INTO products (name, price, description) VALUES (%s, %s, %s)",
                 (name, price, description)
             )
-            conn.commit()
-            cur.close()
-            conn.close()
+            connection.commit()
             flash("Sản phẩm đã được thêm thành công!", "success")
-            return redirect(url_for('index'))
         except Exception as e:
-            flash(f"Có lỗi xảy ra khi thêm sản phẩm: {e}", "danger")
-            return redirect(url_for('add_product'))
+            flash(f"Lỗi khi thêm sản phẩm: {e}", "danger")
+        finally:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
 
-    # Hiển thị form thêm sản phẩm
+        return redirect(url_for('index'))
+
     return render_template('add_product.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
