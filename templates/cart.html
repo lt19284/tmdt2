@@ -5,70 +5,63 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Lumetamy</title>
+    <meta name="description" content="Giỏ hàng của bạn trên Lumetamy - Nền tảng mua sắm trực tuyến.">
+    <meta name="author" content="Lumetamy Team">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+    <title>Lumetamy - Giỏ hàng</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css" type="text/css">
-    <!-- Font awesome -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="../static/font-awesome/css/font-awesome.min.css" type="text/css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Custom css - Các file css do chúng ta tự viết -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='js/app.js') }}" type="text/css">
 </head>
 
 <body>
-    <!-- header -->
+    <!-- Header -->
     <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">Nền tảng</a>
-            <div class="navbar-collapse collapse" id="navbarCollapse">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../admin/dashboard.html">Quản trị</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/products">Sản phẩm</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">Giới thiệu</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/contact">Liên hệ</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products">Sản phẩm</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">Giới thiệu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Liên hệ</a></li>
                 </ul>
-                <form class="form-inline mt-2 mt-md-0" method="get" action="search.html">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Tìm kiếm" aria-label="Search"
-                        name="keyword_tensanpham">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
+                <form class="form-inline" method="get" action="/search">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Tìm kiếm" name="keyword_tensanpham">
+                    <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
                 </form>
             </div>
             <ul class="navbar-nav px-3">
-                <li class="nav-item text-nowrap active">
-                    <a class="nav-link" href="/cart">Giỏ hàng <span class="sr-only">(current)</span></a>
+                <li class="nav-item text-nowrap">
+                    <a class="nav-link" href="/cart">Giỏ hàng</a>
                 </li>
                 <li class="nav-item text-nowrap">
-                        <!-- Kiểm tra nếu người dùng đã đăng nhập -->
-                    {% if session['username'] %}
-                        <p>Chào, {{ session['username'] }}!</p>  <!-- Hiển thị tên người dùng -->
-                        <a href="{{ url_for('logout') }}">Đăng xuất</a>
+                    {% if session.get('username') %}
+                        <span class="nav-link">Chào, {{ session['username'] }}!</span>
+                        <a class="btn btn-danger btn-sm" href="{{ url_for('logout') }}">Đăng xuất</a>
                     {% else %}
-                        <a href="{{ url_for('login') }}">Đăng nhập</a>
+                        <a class="btn btn-success btn-sm" href="{{ url_for('login') }}">Đăng nhập</a>
                     {% endif %}
                 </li>
             </ul>
         </div>
     </nav>
-    <!-- end header -->
+    <!-- End Header -->
 
-   <main>
+    <main class="container mt-4">
         {% if cart_items %}
-            <table>
-                <thead>
+            <h2>Giỏ hàng của bạn</h2>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
                     <tr>
                         <th>Sản phẩm</th>
                         <th>Giá</th>
@@ -81,34 +74,38 @@
                     {% for item in cart_items %}
                         <tr>
                             <td>{{ item.name }}</td>
-                            <td>{{ item.price }}</td>
+                            <td>{{ item.price | format_currency }}</td>
                             <td>{{ item.quantity }}</td>
-                            <td>{{ item.price * item.quantity }}</td>
+                            <td>{{ (item.price * item.quantity) | format_currency }}</td>
                             <td>
-                                <button class="remove-item" data-id="{{ item.id }}">Xóa</button>
+                                <button class="btn btn-danger btn-sm remove-item" data-id="{{ item.id }}">
+                                    Xóa
+                                </button>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <div>
-                <strong>Tổng tiền:</strong> 
+            <div class="d-flex justify-content-between">
+                <strong>Tổng tiền: {{ total_price | format_currency }}</strong>
+                <a href="{{ url_for('checkout') }}" class="btn btn-primary">Thanh toán</a>
             </div>
-            <a href="{{ url_for('checkout') }}" class="btn">Thanh toán</a>
         {% else %}
-            <p>Giỏ hàng của bạn trống!</p>
-            <a href="{{ url_for('index') }}" class="btn">Tiếp tục mua sắm</a>
+            <p class="alert alert-info">Giỏ hàng của bạn trống!</p>
+            <a href="{{ url_for('index') }}" class="btn btn-success">Tiếp tục mua sắm</a>
         {% endif %}
     </main>
-    
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="../static/jquery/jquery.min.js"></script>
-    <script src="../static/popperjs/popper.min.js"></script>
-    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- Custom script - Các file js do mình tự viết -->
-    <script src="../static/js/app.js"></script>
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-dark text-light text-center">
+        <div class="container">
+            <span>&copy; 2024 Lumetamy. Mọi quyền được bảo lưu.</span>
+        </div>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <script src="../static/jquery/jquery.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.remove-item').click(function() {
@@ -121,12 +118,14 @@
                     success: function(response) {
                         alert(response.message);
                         location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("Xảy ra lỗi: " + error);
                     }
                 });
             });
         });
     </script>
-
 </body>
 
 </html>
