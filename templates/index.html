@@ -65,7 +65,7 @@
                     </li>
                     <li>
                     <!-- Hiển thị nút "Thêm sản phẩm" nếu người dùng đã đăng nhập -->
-                    {% if 'user_id' in session %}
+                    {% if 'username' in session %}
                         <a href="/add_product" class="btn btn-success">Thêm Sản Phẩm</a>
                     {% else %}
                         <a href="/login" class="btn btn-primary">Đăng nhập để thêm sản phẩm</a>
