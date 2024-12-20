@@ -63,25 +63,7 @@
     </nav>
     <!-- end header -->
 
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giỏ Hàng</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <header>
-        <h1>Giỏ Hàng</h1>
-        <nav>
-            <a href="{{ url_for('index') }}">Trang chủ</a>
-            <a href="{{ url_for('checkout') }}">Thanh toán</a>
-        </nav>
-    </header>
-
-    <main>
+   <main>
         {% if cart_items %}
             <table>
                 <thead>
