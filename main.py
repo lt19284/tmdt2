@@ -176,7 +176,7 @@ def checkout():
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
     # Kiểm tra nếu người dùng chưa đăng nhập
-    if 'user_id' not in session:
+    if 'username' not in session:
         flash("Bạn phải đăng nhập để thêm sản phẩm!", "danger")
         return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập
 
