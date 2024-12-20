@@ -93,7 +93,6 @@
             </table>
             <div>
                 <strong>Tổng tiền:</strong> 
-                {{ cart_items | sum(attribute='price', attribute2='quantity') }}
             </div>
             <a href="{{ url_for('checkout') }}" class="btn">Thanh toán</a>
         {% else %}
