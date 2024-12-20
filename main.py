@@ -120,37 +120,57 @@ def is_logged_in():
     return 'user_id' in session
 
 # Trang giỏ hàng (chỉ cho phép truy cập khi đăng nhập)
-@app.route('/cart')
+@app.route('/cart', methods=['GET', 'POST'])
 def cart():
-    # Kiểm tra xem người dùng đã đăng nhập hay chưa bằng cách kiểm tra session
-    if not session.get('username'):  # Kiểm tra nếu không có 'username' trong session
-        flash("Bạn phải đăng nhập để truy cập giỏ hàng!")
-        return redirect(url_for('login'))  # Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
-    # Nếu đã đăng nhập, hiển thị trang giỏ hàng
-    return render_template('cart.html')
+    if request.method == 'POST':
+        data = request.json
+        product_id = data.get('id')
+        name = data.get('name')
+        price = data.get('price')
+        quantity = data.get('quantity')
 
+        # Giả lập lưu trữ sản phẩm trong session
+        if 'cart_items' not in session:
+            session['cart_items'] = []
+        session['cart_items'].append({
+            'id': product_id,
+            'name': name,
+            'price': price,
+            'quantity': quantity
+        })
+        session.modified = True
 
-    # Lấy danh sách sản phẩm trong giỏ hàng của người dùng
-    user_id = session['user_id']
-    conn = create_connection()
-    if conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT p.name, p.price, c.quantity 
-            FROM cart c
-            JOIN products p ON c.product_id = p.id
-            WHERE c.user_id = %s
-        """, (user_id,))
-        cart_items = cursor.fetchall()
-        cursor.close()
-        conn.close()
+        return jsonify({'message': 'Sản phẩm đã được thêm vào giỏ hàng!'})
 
+    # Lấy danh sách sản phẩm trong giỏ hàng từ session
+    cart_items = session.get('cart_items', [])
     return render_template('cart.html', cart_items=cart_items)
 
-# Trang contact
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
+# Trang chi tiết sản phẩm
+@app.route('/product-detail/<int:product_id>')
+def product_detail(product_id):
+    # Lấy thông tin chi tiết sản phẩm từ database dựa trên product_id
+    product = {}  # Thay bằng truy vấn từ database
+    return render_template('product_detail.html', product=product)
+
+# Tìm kiếm sản phẩm
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q', '')
+    # Thực hiện tìm kiếm sản phẩm trong database dựa trên query
+    results = []  # Thay bằng kết quả tìm kiếm từ database
+    return render_template('search.html', query=query, results=results)
+
+# Trang thanh toán
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    if request.method == 'POST':
+        # Xử lý đơn hàng: lưu thông tin vào database, gửi email, v.v.
+        flash('Thanh toán thành công!')
+        return redirect(url_for('index'))
+    # Lấy thông tin giỏ hàng và hiển thị trên trang thanh toán
+    cart_items = session.get('cart_items', [])
+    return render_template('checkout.html', cart_items=cart_items)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
