@@ -84,11 +84,11 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-between">
-                <a href="{{ url_for('checkout') }}" class="btn btn-primary">Thanh toán</a>
+                <a href="{{ url_for('checkout') }}" class="">Thanh toán</a>
             </div>
         {% else %}
             <p class="alert alert-info">Giỏ hàng của bạn trống!</p>
-            <a href="{{ url_for('index') }}" class="btn btn-success">Tiếp tục mua sắm</a>
+            <a href="{{ url_for('index') }}" class="">Tiếp tục mua sắm</a>
         {% endif %}
     </main>
 
